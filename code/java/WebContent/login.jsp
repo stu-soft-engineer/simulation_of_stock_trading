@@ -73,7 +73,7 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 <body>
 <div class="login">
 	<h1>管理员登录</h1>
-    <form action="LoginServlet" method="post">
+    <form action="LoginServlet" method="post">					<!--  把该表单信息通过Post的方式传到LoginServlet中去处理 -->
     	<input type="text" name="username" placeholder="账号" required="required" />
         <input type="password" name="password" placeholder="密码" required="required" />
         <button type="submit" class="btn btn-primary btn-block btn-large">登录</button>

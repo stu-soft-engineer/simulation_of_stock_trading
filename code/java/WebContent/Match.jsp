@@ -46,9 +46,8 @@ function goPage(num){
 </head>
 <body onload="goPage(1);">
     <div id="head">
-        <div class="container">
+        <div class="container">		<!--  点击左上角的图标按钮可以返回到Match.jsp的主页 -->
             <div class="row">
-
                 <div class="col-lg-4 col-md-4 col-sm-4">
                     <a href="Match.jsp">
                     <img src="assets/img/logo1.png"  />
@@ -57,7 +56,7 @@ function goPage(num){
             </div>
         </div>
     </div>    
-    <section id="main" >
+    <section id="main" >			<!--  比赛信息栏 -->
         <div class="container" >
             <div class="row">
                 <div class="col-lg-9 col-md-9 col-sm-9">
@@ -77,22 +76,22 @@ function goPage(num){
                                     </thead>
                                     <tbody>
                                     <%
-										Statement state=null;
+										Statement state=null;		  //连接数据库的操作
 										ResultSet rs=null;
 										Connection conn=null;
 										try {
 											DBConn db=new DBConn();
 											conn=db.getConn();
 											state=conn.createStatement();
-											rs=state.executeQuery("select *from match_db order by id desc");
+											rs=state.executeQuery("select *from match_db order by id desc");	//根据sql语句查询并返回一个结果集
 											int count=0;
 											while(rs.next()){
-												String match_name=rs.getString("match_name");
+												String match_name=rs.getString("match_name");					//从结果集中获取需要的信息
 												String regist_time=rs.getString("regist_time");
 												String start_time=rs.getString("start_time");
 											    String id=rs.getString("id");
 									%>
-                                        <tr id="<%=++count%>" >
+                                        <tr id="<%=++count%>" >								<!-- 将对应的信息显示到表格中去  -->
                                             <td><div align="center"><%=count%></div></td>
                                             <td class="td<%=count%>"><div align="center"><span class="label label-danger"><%=match_name%></span></div></td>
                                             <td class="td<%=count%>"><%=regist_time %></td>
@@ -101,7 +100,7 @@ function goPage(num){
                                         </tr>
                                       <%
 											}
-										}catch(Exception e){
+										}catch(Exception e){						//连接完记得要关闭
 											e.printStackTrace();
 										}finally{
 											try{
@@ -119,7 +118,7 @@ function goPage(num){
 										%>
                             		</tbody>
                                 </table>                             
-                            	<button  onclick="goPage(currentpage-1);">上一页</button>
+                            	<button  onclick="goPage(currentpage-1);">上一页</button>		<!-- 实现上下页功能  -->
                             	<button  onclick="goPage(currentpage+1);">下一页</button>
                             </div>                                           
                     </div>
@@ -132,9 +131,7 @@ function goPage(num){
   <a href="blacklist.jsp" class="list-group-item">查看用户黑名单</a>
 </div>   
             </div>
-
         </div>
-
     </div>
     <!--  Jquery Core Script -->
     <script src="assets/js/jquery-1.10.2.js"></script>

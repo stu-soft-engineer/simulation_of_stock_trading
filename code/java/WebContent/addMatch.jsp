@@ -36,11 +36,11 @@
     <script type="text/javascript" src="resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
-    <div id="head">
+    <div id="head">									
         <div class="container">
             <div class="row">
 
-              <div class="col-lg-4 col-md-4 col-sm-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">		<!-- 类名是为了增加css样式 -->
                     <a href="Match.jsp">
                     <img src="assets/img/logo1.png"  />
                   </a>
@@ -59,11 +59,11 @@
     <section id="main">
         <div class="container">
             <div class="row">
-                <div class="col-lg-9 col-md-9 alert alert-info">
+                <div class="col-lg-9 col-md-9 alert alert-info">		
 
                     <h3 class=" text-center">新增比赛</h3>
                    <div class="hr-div"> <hr /></div>
-                    <form action="AddMatchesAction" method="post">
+                    <form action="MatchesServlet" method="post">
                       <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>比赛名称</label>
 							<input type="text" name="match_name" class="form-control" required="required"/>
@@ -89,7 +89,7 @@
                             <textarea class="form-control" name="rules" rows="14"></textarea>
                             <script type="text/javascript">CKEDITOR.replace('rules');</script>
                         </div>
-						<input type="hidden" name="action" value="insert"/>
+						<input type="hidden" name="action" value="insert"/>		<!-- 传递要做的操作和id号 -->
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <button type="submit" class="btn btn-primary">发布比赛</button>
                         </div>

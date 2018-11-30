@@ -33,7 +33,7 @@
     <script type="text/javascript" src="resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
-    <div id="head">
+    <div id="head">								<!-- 与addMatch同理 -->
         <div class="container">
             <div class="row">
 
@@ -57,72 +57,48 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-9 col-md-9 alert alert-info">
-
                     <h3 class=" text-center">删除比赛</h3>
                    <div class="hr-div"> <hr /></div>
-                    <form action="AddMatchesAction" method="post">
-                    	<%
-							String id=request.getParameter("id");
-							System.out.println(id);
-							%>
-                      <!--  <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>请输入新的发布单位</label>
-                            <select name="unit" class="form-control" required="required">
-										<option value="-1">全部</option>										
-													<option value="汕头大学"  >汕头大学</option>											
-													<option value="党委工作部"  >党委工作部</option>											
-													<option value="党委工作部综合办公室"  >党委工作部综合办公室</option>											
-													<option value="党委工作部组宣统办公室"  >党委工作部组宣统办公室</option>											
-													<option value="本科生院"  >本科生院</option>											
-													<option value="本科生院综合办公室"  >本科生院综合办公室</option>											
-													<option value="书院总院"  >书院总院</option>											
-													<option value="研究生院"  >研究生院</option>											
-													<option value="创业学院"  >创业学院</option>											
-													<option value="创新创业研究院"  >创新创业研究院</option>											
-													<option value="行政事务部综合办公室"  >行政事务部综合办公室</option>
-									 </select>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>请输入新的标题</label>
-                            <input type="text" name="title" class="form-control" required="required"/>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>请输入新的文章内容</label>
-                            <textarea class="form-control" name="content" rows="14"></textarea>
-                            <script type="text/javascript">CKEDITOR.replace('content');</script>
-                        </div>
-						<input type="hidden" name="action" value="change"/>
-						<input type="hidden" name="id" value="<%=id%>"/>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <button type="submit" value="提交" class="btn btn-primary">发布消息</button>
-                        </div>
-                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>比赛名称</label>  
-							<input type="text" name="match_name" class="form-control" required="required"/>
-                        </div> 	
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>简介</label>
-                            <input type="text" name="introduction" class="form-control" required="required"/>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>开始时间</label>
-                            <input type="text" name="start_time" class="form-control" required="required"/>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>结束时间</label>
-                            <input type="text" name="end_time" class="form-control" required="required"/>
-                        </div>
-                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>初始金额</label>
-                            <input type="text" name="init_money" class="form-control" required="required"/>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>规则</label>
-                            <textarea class="form-control" name="rules" rows="14"></textarea>
-                            <script type="text/javascript">CKEDITOR.replace('rules');</script>
-                        </div>-->
-						<input type="hidden" name="action" value="delete"/>
-						<input type="hidden" name="id" value="<%=id%>"/>
+                    <form action="MatchesServlet" method="post">
+							<%
+								String _match_id=request.getParameter("id");				//通过url来获取id号
+								System.out.print(_match_id);
+								int match_id=Integer.parseInt(_match_id);					//字符型转换成整型
+								Statement state=null;
+								ResultSet rs=null;
+								Connection conn=null;
+								try {
+										DBConn db=new DBConn();								//连接数据库的操作
+										conn=db.getConn();
+										state=conn.createStatement();
+										rs=state.executeQuery("select *from match_db");		//根据sql语句查询并返回一个结果集
+										int count=0;
+										while(rs.next()){
+											if(match_id==rs.getInt(1)){
+												String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
+												%>
+												<input type="hidden" name="match_name" value="<%=match_name%>"/>
+												<% 
+												}
+											}
+										}catch(Exception e){
+											e.printStackTrace();
+											}finally{
+												try{	
+													if(rs!=null)			//连接完记得要关闭
+														rs.close();
+													if(state!=null)
+														state.close();
+													if(conn!=null)
+														conn.close();
+													}catch(SQLException e){
+														e.printStackTrace();
+														}
+												}
+									%>
+						<input type="hidden" name="action" value="delete"/>		
+						<input type="hidden" name="id" value="<%=match_id%>"/>
+						
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <button type="submit" class="btn btn-primary">确认删除</button>
                         </div>

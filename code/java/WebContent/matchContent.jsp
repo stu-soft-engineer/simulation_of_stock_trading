@@ -33,7 +33,7 @@
     <title>Insert title here</title>
 </head>
 <body>
-    <div id="head">
+    <div id="head">						<!--  点击左上角的图标按钮可以返回到Match.jsp的主页 -->
         <div class="container">
             <div class="row">
 
@@ -53,21 +53,21 @@
  <div class="panel panel-default">
   <div class="panel-body">
 	<%
-	String _match_id=request.getParameter("id");
+	String _match_id=request.getParameter("id");				//通过url来获取id号
 	System.out.print(_match_id);
-	int match_id=Integer.parseInt(_match_id);
+	int match_id=Integer.parseInt(_match_id);					//字符型转换成整型
 	Statement state=null;
 	ResultSet rs=null;
 	Connection conn=null;
 	try {
-		DBConn db=new DBConn();
+		DBConn db=new DBConn();								//连接数据库的操作
 		conn=db.getConn();
 		state=conn.createStatement();
-		rs=state.executeQuery("select *from match_db");
+		rs=state.executeQuery("select *from match_db");		//根据sql语句查询并返回一个结果集
 		int count=0;
 		while(rs.next()){
 			if(match_id==rs.getInt(1)){
-				String match_name=rs.getString("match_name");
+				String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
 				String regist_time=rs.getString("regist_time");
 				String start_time=rs.getString("start_time");
 				String introduction=rs.getString("introduction");
@@ -76,7 +76,7 @@
 				String init_money=rs.getString("init_money");
 			%>
 						<div>
-                      		<label>比赛名称</label>
+                      		<label>比赛名称</label>				<!--  显示信息 -->
 							<p><%=match_name %></p>
                         </div>
                         <div>
@@ -105,8 +105,8 @@
 	}catch(Exception e){
 		e.printStackTrace();
 	}finally{
-		try{
-			if(rs!=null)
+		try{	
+			if(rs!=null)			//连接完记得要关闭
 				rs.close();
 			if(state!=null)
 				state.close();
@@ -123,7 +123,7 @@
  </div>
                         <div class="col-lg-3 col-md-3 col-sm-3">
 <div class="list-group">
-	<a href="changeMatch.jsp?id=<%=match_id %>" class="list-group-item active">修改该比赛</a>
+	<a href="changeMatch.jsp?id=<%=match_id %>" class="list-group-item active">修改该比赛</a>		<!--  页面的跳转 -->
 	<a href="deleteMatch.jsp?id=<%=match_id %>" class="list-group-item">删除该比赛</a>
  	 <a href="Match.jsp" class="list-group-item">返回首页</a>
 </div>   

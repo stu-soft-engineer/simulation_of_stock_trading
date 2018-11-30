@@ -63,7 +63,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 		
 
         String forward;
-        if(bool){
+        if(bool){					//验证成功后跳转
         	forward="Match.jsp";
         	RequestDispatcher rd=request.getRequestDispatcher(forward);
             rd.forward(request, response);

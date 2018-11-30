@@ -55,22 +55,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>AddMatchesAction</display-name>
-    <servlet-name>AddMatchesAction</servlet-name>
-    <servlet-class>controller.matchesinfo.AddMatchesAction</servlet-class>
+    <display-name>MatchesServlet</display-name>
+    <servlet-name>MatchesServlet</servlet-name>
+    <servlet-class>controller.matchesinfo.MatchesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>AddMatchesAction</servlet-name>
-    <url-pattern>/AddMatchesAction</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>SuperResetServlet</display-name>
-    <servlet-name>SuperResetServlet</servlet-name>
-    <servlet-class>contorller.superAdminInfo.SuperResetServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SuperResetServlet</servlet-name>
-    <url-pattern>/SuperResetServlet</url-pattern>
+    <servlet-name>MatchesServlet</servlet-name>
+    <url-pattern>/MatchesServlet</url-pattern>
   </servlet-mapping>
 </web-app>

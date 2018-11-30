@@ -33,7 +33,7 @@
     <script type="text/javascript" src="resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
-    <div id="head">
+    <div id="head">						<!-- 与addMatch同理 -->
         <div class="container">
             <div class="row">
 
@@ -60,7 +60,7 @@
 
                     <h3 class=" text-center">修改比赛</h3>
                    <div class="hr-div"> <hr /></div>
-                    <form action="AddMatchesAction" method="post">
+                    <form action="MatchesServlet" method="post">
                     	<%
 							String id=request.getParameter("id");
 							System.out.println(id);

@@ -1,9 +1,9 @@
 package bean.admininfo;                   
 
-public class AdminInfo{
-	private String username;
+public class AdminInfo{						//存储用户名和密码
+	private String username;	
 	private String password;
-	
+									
 	public String getUsername() {
 		return username;
 	}

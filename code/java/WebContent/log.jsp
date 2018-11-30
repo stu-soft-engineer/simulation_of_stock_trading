@@ -44,13 +44,13 @@ function goPage(num){
 }
 	</script>
 </head>
-<body onload="goPage(1);">
+<body onload="goPage(1);">					<!-- 与Match同理 -->
     <div id="head">
         <div class="container">
             <div class="row">
 
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <a href="homepage.jsp">
+                    <a href="Match.jsp">
                     <img src="assets/img/logo1.png"  />
                         </a>
                 </div>
