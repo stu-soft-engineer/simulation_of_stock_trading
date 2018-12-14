@@ -11,11 +11,13 @@ def check(a, b):
     if a == b:
         return True
 
+
+
 def login(user, password):
 
     return 'hi ' + user
     
-def regist(user, password, wxid, heading):
+def regist(user, password, heading,nickname):
     r = {
         'value' : 0
     }
@@ -28,3 +30,6 @@ def regist(user, password, wxid, heading):
         
         r['value'] = 1
     return r
+
+def getUserInfo(token):
+    
