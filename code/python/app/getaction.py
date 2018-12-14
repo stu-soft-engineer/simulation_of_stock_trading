@@ -1,6 +1,6 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
-
+from flask import jsonify
 #连接数据库
 def con():
     db_host = '119.23.36.18'
