@@ -137,7 +137,6 @@ def buyOrder(mydb, token, *, matchID, stockID, buyNum, stockPrice):
         return dueR(r, 1)
     except:
         return dueR(r, -102)
-    return dueR(r, -666)
 
 
 def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
@@ -150,25 +149,25 @@ def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
     user = checkTOKEN(token, mydb)
     if user == None:
         return dueR(r, -1)
-    #try:
-    ownNum = competitor.getStockNum(mydb, matchID, user, stockID)  # 查询余额
-    sellNum = int(sellNum)
-    if ownNum < sellNum:
-        return dueR(r, -2)
-    ownNum -= sellNum
-    if competitor.updateStockNum(mydb, matchID, user, stockID, ownNum) == False:  # 更新余额
-        return dueR(r, -103)
-    # 加入订单
-    mycursor = mydb.cursor()
-    mycursor.execute(
-        "INSERT INTO order_db (order_type, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s, %s, %s, %s, %s, %s, %s)",
-        (2, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
-    mydb.commit()
-    if mycursor.rowcount == 0:
-        return dueR(r, -103)
-    return dueR(r, 1)
-    #except:
-    #   return dueR(r, -102)
+    try:
+        ownNum = competitor.getStockNum(mydb, matchID, user, stockID)  # 查询余额
+        sellNum = int(sellNum)
+        if ownNum < sellNum:
+            return dueR(r, -2)
+        ownNum -= sellNum
+        if competitor.updateStockNum(mydb, matchID, user, stockID, ownNum) == False:  # 更新余额
+            return dueR(r, -103)
+        # 加入订单
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "INSERT INTO order_db (order_type, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s, %s, %s, %s, %s, %s, %s)",
+            (2, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
+        mydb.commit()
+        if mycursor.rowcount == 0:
+            return dueR(r, -103)
+        return dueR(r, 1)
+    except:
+       return dueR(r, -102)
 
 
 def getUserInfo(mydb, token):
