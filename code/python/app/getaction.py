@@ -10,7 +10,7 @@ def con():
     db_host = '119.23.36.18'
     db_user = 'test_market'
     db_passed = 'GrZFWfSh4GTMRBFy'
-    return mysql.connector.connect(host = db_host, user = db_user, passwd = db_passed)
+    return mysql.connector.connect(host=db_host, user=db_user, passwd=db_passed)
 
 
 def check(a, b):

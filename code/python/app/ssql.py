@@ -10,7 +10,7 @@ class SQLink:
 
     """初始化，返回连接id"""
     def __init__(self):
-        self.db = mysql.connector.connect(host = self.db_host, user = self.db_user, passwd = self.db_passed)
+        self.db = mysql.connector.connect(host=self.db_host, user=self.db_user, passwd=self.db_passed)
 
     """返回db对象"""
     def get_db(self):
