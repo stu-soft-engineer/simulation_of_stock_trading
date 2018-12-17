@@ -52,6 +52,7 @@
 |5|order_status|订单状态|int(11)|不能为空|
 |6|stock_id|股票id|int(11)|不能为空|
 |7|order_num|数量|int(11)|不能为空|
+|8|price|价格|int(11)|不能为空|
 --
 ###stock_cache  股票
 |序号|字段名称|字段说明|类型|备注|
