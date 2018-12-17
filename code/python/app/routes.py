@@ -29,7 +29,7 @@ def action_index():
 @app.route('/<ac>', methods=['POST'])
 def to_do(ac):
     global mydbcon
-    mydb = mydbcon.get_db()
+    mydb = mydbcon.get_db() # 这个是数据库连接
 
     if ac == 'login':
         # 登录
