@@ -1,6 +1,9 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
+
+
 import mysql.connector
+
 
 class SQLink:
     db = None
@@ -20,4 +23,3 @@ class SQLink:
     """关闭连接"""
     def turn_off(self):
         pass
-

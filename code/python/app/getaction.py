@@ -1,11 +1,14 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
+
+
 from flask import jsonify
 import time
 import hashlib
 import mysql.connector
 from app import stock
 from app import competitor
+
 
 def dueR(r, v):  # 将字典r的value项改成v的值，并且转成json
     r['value'] = v
@@ -31,7 +34,7 @@ def checkTOKEN(token, mydb):  # in：token,mydb out：wxid for：检测出token�
         if myresult != None:
             return myresult[0]
     return None
-            
+
 
 def getTimeStamp():  # 获取10位整数时间戳
     return int(time.time())
@@ -51,10 +54,10 @@ def login(mydb, user, password):
     }
     # 1： 正常、 -1：密码错误、 -2：封号、 -101：数据库连接失败、 -102：更新token异常、 -103：更新token失败（未注册）
     if checkPSW(user,password):
-        return dueR(r, -1) 
+        return dueR(r, -1)
     #mydb = con()
     if mydb == None:
-        return dueR(r, -101) 
+        return dueR(r, -101)
     mycursor = mydb.cursor()
 
     try:
@@ -79,7 +82,7 @@ def login(mydb, user, password):
             r['token'] = token
         else:
             r['value'] = -103
-    return jsonify(r) 
+    return jsonify(r)
 
 
 def regist(mydb, user, password, heading, nick):
@@ -88,10 +91,10 @@ def regist(mydb, user, password, heading, nick):
     }
     # 1： 正常、 -1：密码错误、 -101：数据库连接失败、 -102：插入异常（重复注册）、 -103：插入失败
     if checkPSW(user,password):
-        return dueR(r, -1) 
+        return dueR(r, -1)
     #mydb = con()
     if mydb == None:
-        return dueR(r, -101) 
+        return dueR(r, -101)
     try:
         mycursor = mydb.cursor()
         mycursor.execute("INSERT INTO user_db (wxid, heading, regist_time, nickName) VALUES (%s, %s, %s, %s)", (user, heading, getTimeStamp(), nick))
@@ -103,7 +106,7 @@ def regist(mydb, user, password, heading, nick):
             r['value'] = 1
         else:
             r['value'] = -103
-    return jsonify(r) 
+    return jsonify(r)
 
 
 
@@ -184,5 +187,4 @@ def getUserInfo(mydb, token):
         return dueR(r, -1)
     r['wxid'] = user
     r['value'] = 1
-    pass
     return jsonify(r)

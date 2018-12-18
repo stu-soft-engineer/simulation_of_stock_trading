@@ -1,13 +1,17 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
+
+
 from app import app
 from flask import render_template
 from flask import request
 from app import getaction
 from app import ssql
 
+
 mydbcon = ssql.SQLink()
 print('林肯死大头！', mydbcon)
+
 
 @app.route('/')
 @app.route('/index')
@@ -41,7 +45,7 @@ def to_do(ac):
         else:
             r = getaction.login(mydb, user, psw)
             return r
-               
+
     elif ac == 'regist':
         # 注册
         try:
@@ -54,7 +58,7 @@ def to_do(ac):
         else:
             r = getaction.regist(mydb, user, psw, heading, nickName)
             return r
-    
+
     elif ac == 'getUserInfo':
         #获取用户个人信息（我的比赛、持仓信息）
         try:
@@ -93,7 +97,7 @@ def to_do(ac):
             r = getaction.sellOrder(mydb, token, matchID=matchID, stockID=stockID, sellNum=stockNumber, stockPrice=stockPrice)
             return r
 
-    """ 
+    """
     elif ac == 'joinMatch':
         #报名比赛（）
         token = request.form['token']# token
@@ -133,8 +137,8 @@ def to_do(ac):
     elif ac == 'getUserOrder':
         #查询该用户的所有状态的订单
         token = request.form['token']# token
-        return r 
-    
+        return r
+
     """
 
     return '<h3>Bad request.</h3>'

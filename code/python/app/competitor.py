@@ -1,5 +1,7 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
+
+
 import mysql.connector
 
 
@@ -20,6 +22,7 @@ def updateBalance(mydb, matchID, user, balance):
         return False
     else:
         return True
+
 
 def getStockNum(mydb, matchID, user, stockID):
     mycursor = mydb.cursor()
