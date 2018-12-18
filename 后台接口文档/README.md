@@ -1,3 +1,5 @@
+后台接口
+
 ###注册 119.23.36.18:8080/regist
 
 描述：注册账户
@@ -31,7 +33,7 @@ Content-Type: multipart/form-data
 
 ### 登陆 119.23.36.18:8080/login
 
-描述：登录账户并返回token
+描述：登录账户并返回token，后面的操作需要用到
 
 POST /regist HTTP/1.1
 
@@ -63,7 +65,7 @@ Content-Type: multipart/form-data
 
 ### 购买股票 119.23.36.18:8080/buy
 
-描述：下购买股票的订单
+描述：下单购买股票
 
 POST /regist HTTP/1.1
 
@@ -93,7 +95,7 @@ Content-Type: multipart/form-data
 
 ### 出售股票 119.23.36.18:8080/sell
 
-描述：下购买股票的订单
+描述：下单出售股票
 
 POST /regist HTTP/1.1
 
