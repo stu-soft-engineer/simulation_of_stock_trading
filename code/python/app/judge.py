@@ -69,12 +69,12 @@ def checkOrder():
                 competitor.updateBalance(mydb, x[8], x[2], balance)
                 print('卖出打钱',x[2],x[5],balance)
 
-
+count = 0
 def judgeloop(): # 判官
-    count = 0
+    global count
     while True:
         count+=1
-        print('交易撮合心跳<', count, '>', time.time())
+        #print('交易撮合心跳<', count, '>', time.time())
         checkOrder()
         time.sleep(30)
 
