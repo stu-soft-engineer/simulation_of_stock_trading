@@ -27,7 +27,7 @@ def checkTOKEN(token, mydb):  # in：token,mydb out：wxid for：检测出token�
     try:
         mycursor.execute("SELECT wxid FROM user_db WHERE token = %s", (token,))
         myresult = mycursor.fetchone()
-        #print(myresult)
+        # print(myresult)
     except:
         return None
     else:
@@ -49,13 +49,13 @@ def getToken(user):  # 加密获取token
 
 def login(mydb, user, password):
     r = {
-        'value' : 0,
-        'token' : ''
+        'value': 0,
+        'token': ''
     }
     # 1： 正常、 -1：密码错误、 -2：封号、 -101：数据库连接失败、 -102：更新token异常、 -103：更新token失败（未注册）
-    if checkPSW(user,password):
+    if checkPSW(user, password):
         return dueR(r, -1)
-    #mydb = con()
+    # mydb = con()
     if mydb == None:
         return dueR(r, -101)
     mycursor = mydb.cursor()
@@ -87,12 +87,12 @@ def login(mydb, user, password):
 
 def regist(mydb, user, password, heading, nick):
     r = {
-        'value' : 0
+        'value': 0
     }
     # 1： 正常、 -1：密码错误、 -101：数据库连接失败、 -102：插入异常（重复注册）、 -103：插入失败
     if checkPSW(user,password):
         return dueR(r, -1)
-    #mydb = con()
+    # mydb = con()
     if mydb == None:
         return dueR(r, -101)
     try:
@@ -107,7 +107,6 @@ def regist(mydb, user, password, heading, nick):
         else:
             r['value'] = -103
     return jsonify(r)
-
 
 
 def buyOrder(mydb, token, *, matchID, stockID, buyNum, stockPrice):
@@ -179,7 +178,7 @@ def getUserInfo(mydb, token):
         'wxid': ''
     }
     # 1： 正常、 -1：token错误
-    #mydb = con()
+    # mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -188,3 +187,84 @@ def getUserInfo(mydb, token):
     r['wxid'] = user
     r['value'] = 1
     return jsonify(r)
+
+
+def joinMatch(mydb, token, matchid):
+    r = {
+        'value': 0,
+    }
+
+    # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+
+    if mydb == None:
+        return dueR(r, -101)
+
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+
+    try:
+        mycursor = mydb.cursor()
+
+    except:
+        return dueR(r, -102)
+
+
+def quitMatch(mydb, token, matchid):
+    r = {
+        'value': 0,
+    }
+
+    # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+
+    if mydb == None:
+        return dueR(r, -101)
+
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+
+    try:
+        pass
+    except:
+        return dueR(r, -102)
+
+
+def getMatchInfo(mydb, token, matchid):
+    r = {
+        'value': 0,
+    }
+
+    # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+
+    if mydb == None:
+        return dueR(r, -101)
+
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+
+    try:
+        pass
+    except:
+        return dueR(r, -102)
+
+
+def getMatchRank(mydb, token, matchid):
+    r = {
+        'value': 0,
+    }
+
+    # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+
+    if mydb == None:
+        return dueR(r, -101)
+
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+
+    try:
+        pass
+    except:
+        return dueR(r, -102)
