@@ -10,6 +10,8 @@ def getBalance(mydb, matchID, user):
     mycursor.execute(
         "SELECT balance FROM competitor_db WHERE match_id = %s AND wxid = %s", (matchID, user))
     myresult = mycursor.fetchone()
+    if myresult == None:
+        return 0
     return myresult[0]
 
 

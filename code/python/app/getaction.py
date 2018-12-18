@@ -171,6 +171,27 @@ def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
     except:
        return dueR(r, -102)
 
+def rollBackOrder(mydb, token, rollBackOrder):
+    r = {
+        'value': 0
+    }
+    # 1： 正常、 -1：token错误、 -2：订单id不存在 -101：数据库连接失败、 -102：sql异常
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    try:
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "UPDATE order_db SET order_type=3  WHERE wxid=%s AND id=%s", (user, rollBackOrder))
+        mydb.commit()
+        if mycursor.rowcount == 0:
+            return dueR(r, -2)
+        return dueR(r, 1)
+    except:
+       return dueR(r, -102)
+    return dueR(r, -666)
 
 def getUserInfo(mydb, token):
     r = {

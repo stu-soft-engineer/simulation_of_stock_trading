@@ -11,7 +11,8 @@ from app import ssql
 
 mydbcon = ssql.SQLink()
 print('林肯死大头！', mydbcon)
-
+from app import judge
+judge.star_judeg(mydbcon.get_db())
 
 @app.route('/')
 @app.route('/index')
@@ -96,6 +97,18 @@ def to_do(ac):
         else:
             r = getaction.sellOrder(mydb, token, matchID=matchID, stockID=stockID, sellNum=stockNumber, stockPrice=stockPrice)
             return r
+    
+    elif ac == 'rollBackOrder':
+        #撤销订单
+        try:
+            token = request.form['token']# token
+            orderID = request.form['orderid']# 订单的id
+        except:
+            pass
+        else:
+            r = getaction.rollBackOrder(mydb, token,orderID)
+            return r
+        return r
 
     elif ac == 'joinMatch':
         # 报名比赛（）
@@ -155,12 +168,6 @@ def to_do(ac):
     #     # 获取股票信息
     #     token = request.form['token']# token
     #     stockID = request.form['stockid']# 股票的id
-    #     return r
-    #
-    # elif ac == 'rollBackOrder':
-    #     # 撤销订单
-    #     token = request.form['token']     # token
-    #     orderID = request.form['orderid'] # 订单的id
     #     return r
     #
     # elif ac == 'getUserOrder':
