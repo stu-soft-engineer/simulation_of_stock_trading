@@ -191,10 +191,11 @@ def getUserInfo(mydb, token):
 
 def joinMatch(mydb, token, matchid):
     r = {
-        'value': 0,
+        'value': 0
     }
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    # -3: 重复参加比赛  -4: 比赛不存在
 
     if mydb == None:
         return dueR(r, -101)
@@ -206,6 +207,50 @@ def joinMatch(mydb, token, matchid):
     try:
         mycursor = mydb.cursor()
 
+        # get wxid according token
+        sql = "SELECT wxid FROM user_db WHERE token = %s"
+        val = (token,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        wxid = myresult[0]
+
+        # check match
+        sql = "SELECT * FROM match_db WHERE id = %s"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -4)
+
+        # check wxid - match_id unique
+        sql = "SELECT * FROM competitor_db WHERE match_id = %s AND wxid = %s"
+        val = (matchid, wxid)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult != None:
+            return dueR(r, -3)
+
+        # get init_money from match_db
+        sql = "SELECT init_money FROM match_db WHERE id = %s"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        init_money = myresult[0]
+
+        # add into competitor_db
+        sql = "INSERT INTO competitor_db (match_id, wxid, balance) VALUES (%s, %s, %s)"
+        val = (matchid, wxid, init_money)
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+        # # add into storage_db
+        # sql = "INSERT INTO storage_db (wxid, match_id, stock_id, own_num, ave_price, lock_num) VALUES (%s, %d, %s, %d, %f, %d)"
+        # val = (wxid, matchid, "", 0, 0.0, 0)
+        # mycursor.execute(sql, val)
+        # mydb.commit()
+
+        return dueR(r, 1)
+
     except:
         return dueR(r, -102)
 
@@ -216,6 +261,7 @@ def quitMatch(mydb, token, matchid):
     }
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
 
     if mydb == None:
         return dueR(r, -101)
@@ -225,17 +271,49 @@ def quitMatch(mydb, token, matchid):
         return dueR(r, -1)
 
     try:
-        pass
+        mycursor = mydb.cursor()
+
+        # get wxid according token
+        sql = "SELECT wxid FROM user_db WHERE token = %s"
+        val = (token,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        wxid = myresult[0]
+
+        # check match
+        sql = "SELECT * FROM match_db WHERE id = %s"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -4)
+
+        # delete from competitor_db
+        sql = "SELECT * FROM competitor_db WHERE match_id = %s AND wxid = %s"
+        val = (matchid, wxid)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -5)
+
+        sql = "DELETE FROM competitor_db WHERE match_id = %s AND wxid = %s"
+        val = (matchid, wxid)
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+        return dueR(r, 1)
+
     except:
         return dueR(r, -102)
 
 
 def getMatchInfo(mydb, token, matchid):
     r = {
-        'value': 0,
+        'value': 0
     }
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
 
     if mydb == None:
         return dueR(r, -101)
@@ -245,7 +323,65 @@ def getMatchInfo(mydb, token, matchid):
         return dueR(r, -1)
 
     try:
-        pass
+        mycursor = mydb.cursor()
+
+        # check match
+        sql = "SELECT * FROM match_db WHERE id = %s"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -4)
+
+        r['id'] = myresult[0]
+        r['match_name'] = myresult[1]
+        r['match_detail'] = myresult[2]
+        r['match_rule'] = myresult[3]
+        r['start_time'] = myresult[4]
+        r['sign_time'] = myresult[5]
+        r['end_time'] = myresult[6]
+        r['init_money'] = myresult[7]
+
+        return dueR(r, 1)
+
+    except:
+        return dueR(r, -102)
+
+
+def getMatchList(mydb, token):
+    r = {
+        'value': 0
+    }
+
+    # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
+
+    if mydb == None:
+        return dueR(r, -101)
+
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+
+    try:
+        mycursor = mydb.cursor()
+
+        # check match
+        sql = "SELECT * FROM match_db"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+        if myresult == []:
+            return dueR(r, -4)
+
+        matchlist = []
+        for x in myresult:
+            tmp = {'match_name': x[1]}
+            matchlist.append(tmp)
+
+        r['matchlist'] = matchlist
+
+        return dueR(r, 1)
+
     except:
         return dueR(r, -102)
 
@@ -256,6 +392,7 @@ def getMatchRank(mydb, token, matchid):
     }
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛  -6: 暂无参赛人员
 
     if mydb == None:
         return dueR(r, -101)
@@ -265,6 +402,31 @@ def getMatchRank(mydb, token, matchid):
         return dueR(r, -1)
 
     try:
-        pass
+        mycursor = mydb.cursor()
+
+        # check match
+        sql = "SELECT * FROM match_db WHERE id = %s"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -4)
+
+        # competitor_db sorted by balance
+        sql = "SELECT * FROM competitor_db WHERE match_id = %s ORDER BY balance DESC LIMIT 10"
+        val = (matchid,)
+        mycursor.execute(sql, val)
+        myresult = mycursor.fetchall()
+        if myresult == []:
+            return dueR(r, -6)
+
+        ranklist = []
+        for x in myresult:
+            tmp = {'wxid': x[2], 'balance': x[3]}
+            ranklist.append(tmp)
+
+        r['ranklist'] = ranklist
+
+        return dueR(r, 1)
     except:
         return dueR(r, -102)

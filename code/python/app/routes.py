@@ -100,8 +100,8 @@ def to_do(ac):
     elif ac == 'joinMatch':
         # 报名比赛（）
         try:
-            token = request.form['token']      # token
-            matchID = request.form['matchid']  # 比赛的id
+            token = request.form['token']           # token
+            matchID = int(request.form['matchid'])  # 比赛的id
         except:
             pass
         else:
@@ -111,8 +111,8 @@ def to_do(ac):
     elif ac == 'quitMatch':
         # 退出比赛（）
         try:
-            token = request.form['token']      # token
-            matchID = request.form['matchid']  # 比赛的id
+            token = request.form['token']           # token
+            matchID = int(request.form['matchid'])  # 比赛的id
         except:
             pass
         else:
@@ -122,8 +122,8 @@ def to_do(ac):
     elif ac == 'getMatchInfo':
         # 获取比赛信息
         try:
-            token = request.form['token']      # token
-            matchID = request.form['matchid']  # 比赛的id
+            token = request.form['token']           # token
+            matchID = int(request.form['matchid'])  # 比赛的id
         except:
             pass
         else:
@@ -133,12 +133,22 @@ def to_do(ac):
     elif ac == 'getMatchRank':
         # 获取比赛前十名
         try:
-            token = request.form['token']      # token
-            matchID = request.form['matchid']  # 比赛的id
+            token = request.form['token']           # token
+            matchID = int(request.form['matchid'])  # 比赛的id
         except:
             pass
         else:
             r = getaction.getMatchRank(mydb, token, matchID)
+            return r
+
+    elif ac == 'getMatchList':
+        # 获取比赛列表
+        try:
+            token = request.form['token']           # token
+        except:
+            pass
+        else:
+            r = getaction.getMatchList(mydb, token)
             return r
 
     # elif ac == 'getStockInfo':
