@@ -396,7 +396,7 @@ def getMatchList(mydb, token):
 
         matchlist = []
         for x in myresult:
-            tmp = {'match_name': x[1]}
+            tmp = {'id': x[0], 'match_name': x[1]}
             matchlist.append(tmp)
 
         r['matchlist'] = matchlist

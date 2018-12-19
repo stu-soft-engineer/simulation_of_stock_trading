@@ -57,7 +57,7 @@ def checkOrder():
                     mycursor.execute("UPDATE storage_db SET ave_price=%s,lock_num=%s WHERE wxid=%s AND match_id=%s AND stock_id=%s",(avePrice,lockNum,x[2],x[8],x[5]))
                     print('更新仓库',x[2],x[5],avePrice,lockNum)
                 mydb.commit()
-                
+
             elif x[1]==2:#卖出
                 sti = stock.getStockInfo(x[5])
                 if int(sti[10]) == 0: # 跌停板
