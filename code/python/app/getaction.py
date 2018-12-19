@@ -131,8 +131,8 @@ def buyOrder(mydb, token, *, matchID, stockID, buyNum, stockPrice):
         # 加入订单
         mycursor = mydb.cursor()
         mycursor.execute(
-            "INSERT INTO order_db (order_type, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s, %s, %s, %s, %s, %s, %s)",
-            (1, user, getTimeStamp(), 1, stockID, buyNum, stockPrice))
+            "INSERT INTO order_db (order_type, matchID, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
+            (1,matchID, user, getTimeStamp(), 1, stockID, buyNum, stockPrice))
         mydb.commit()
         if mycursor.rowcount == 0:
             return dueR(r, -103)
@@ -162,8 +162,8 @@ def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
         # 加入订单
         mycursor = mydb.cursor()
         mycursor.execute(
-            "INSERT INTO order_db (order_type, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s, %s, %s, %s, %s, %s, %s)",
-            (2, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
+            "INSERT INTO order_db (order_type,matchID, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
+            (2,matchID, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
         mydb.commit()
         if mycursor.rowcount == 0:
             return dueR(r, -103)
@@ -175,7 +175,7 @@ def rollBackOrder(mydb, token, rollBackOrder):
     r = {
         'value': 0
     }
-    # 1： 正常、 -1：token错误、 -2：订单id不存在 -101：数据库连接失败、 -102：sql异常
+    # 1： 正常、 -1：token错误、 -2：订单id不存在、 -2：订单id已完成或撤回 -101：数据库连接失败、 -102：sql异常、 -102：更新订单失败
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -184,10 +184,25 @@ def rollBackOrder(mydb, token, rollBackOrder):
     try:
         mycursor = mydb.cursor()
         mycursor.execute(
-            "UPDATE order_db SET order_type=3  WHERE wxid=%s AND id=%s", (user, rollBackOrder))
+            "SELECT * FROM order_db WHERE wxid=%s AND id=%s AND order_status=1", (user, rollBackOrder))
+        myresult = mycursor.fetchone()
+        if myresult == None:
+            return dueR(r, -2)
+        if myresult[1]>2:
+            return dueR(r, -3)
+        elif myresult[1]==1: # 撤回买入加钱
+            balance = competitor.getBalance(mydb,myresult[8],user) + myresult[6]*myresult[7]
+            competitor.updateBalance(mydb,myresult[8],user,balance)
+            print('撤回打钱',myresult[8],user,balance)
+        elif myresult[1]==2: # 撤回卖出加库存
+            stockNum = competitor.getStockNum(mydb,myresult[8],user,myresult[5]) + myresult[6]
+            competitor.updateStockNum(mydb,myresult[8],user,myresult[5],stockNum)
+            print('撤回加仓',myresult[8],user,stockNum)
+        mycursor.execute(
+            "UPDATE order_db SET order_status=3  WHERE wxid=%s AND id=%s", (user, rollBackOrder))
         mydb.commit()
         if mycursor.rowcount == 0:
-            return dueR(r, -2)
+            return dueR(r, -103)
         return dueR(r, 1)
     except:
        return dueR(r, -102)

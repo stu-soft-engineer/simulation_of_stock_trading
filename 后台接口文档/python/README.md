@@ -123,7 +123,30 @@ Content-Type: multipart/form-data
 
 
 
+### 撤回订单 119.23.36.18:8080/rollBackOrder
 
+描述：撤回买入订单并退款、撤回卖出订单并加库存
+
+POST /regist HTTP/1.1
+
+Content-Type: multipart/form-data
+
+| 提交参数（form-data） | 说明                | 例子                             | type   |
+| --------------------- | ------------------- | -------------------------------- | ------ |
+| token                 | 登陆时候获取的token | 746018d656cc0f54aab61dbd60ba263c | string |
+| orderid               | 订单                | 12                               | int    |
+
+**返回数据（JSON）**
+
+```
+{
+    "value": 1
+}
+```
+
+**value（int）：**
+
+1： 正常、 -1：token错误、 -2：订单id不存在、 -2：订单id已完成或撤回 -101：数据库连接失败、 -102：sql异常、 -102：更新订单失败
 
 
 

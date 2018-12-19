@@ -38,12 +38,8 @@ def getStockNum(mydb, matchID, user, stockID):
 
 def updateStockNum(mydb, matchID, user, stockID, ownNum):
     mycursor = mydb.cursor()
-    if ownNum == 0:
-        mycursor.execute(
-            "DELETE FROM storage_db WHERE match_id = %s AND wxid = %s AND stock_id = %s", (matchID, user, stockID))
-    else:
-        mycursor.execute(
-            "UPDATE storage_db SET own_num=%s WHERE match_id = %s AND wxid = %s AND stock_id = %s", (ownNum, matchID, user, stockID))
+    mycursor.execute(
+        "UPDATE storage_db SET own_num=%s WHERE match_id = %s AND wxid = %s AND stock_id = %s", (ownNum, matchID, user, stockID))
     mydb.commit()
     if mycursor.rowcount == 0:
         return False
