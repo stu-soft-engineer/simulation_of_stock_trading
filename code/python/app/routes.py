@@ -97,7 +97,7 @@ def to_do(ac):
         else:
             r = getaction.sellOrder(mydb, token, matchID=matchID, stockID=stockID, sellNum=stockNumber, stockPrice=stockPrice)
             return r
-    
+
     elif ac == 'rollBackOrder':
         #撤销订单
         try:
