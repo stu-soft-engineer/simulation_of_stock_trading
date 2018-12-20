@@ -16,7 +16,7 @@ def getStockDM(stockID):
         return dm
 
 
-def getStockInfo(stockID):
+def getStockInfo(stockID,**kw):
     """
     传入(股票id，[可选] sh、sz)
     返回一个tuple，('大秦铁路', '7.970', '7.980'....)
@@ -46,7 +46,10 @@ def getStockInfo(stockID):
     30：”2008-01-11″，日期；
     31：”15:05:32″，时间；
     """
-    dm = getStockDM(stockID)
+    if 'dm' in kw:
+        dm = kw['dm']
+    else:
+        dm = getStockDM(stockID)
     if dm == None:
         return None
     stockID = dm + stockID
