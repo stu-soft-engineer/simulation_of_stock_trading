@@ -164,12 +164,63 @@ def to_do(ac):
             r = getaction.getMatchList(mydb, token)
             return r
 
-    # elif ac == 'getStockInfo':
-    #     # 获取股票信息
-    #     token = request.form['token']# token
-    #     stockID = request.form['stockid']# 股票的id
-    #     return r
-    #
+    elif ac == 'getUserInfo1':
+        # 获取用户基本信息
+        try:
+            token = request.form['token']           # token
+        except:
+            pass
+        else:
+            r = getaction.getUserInfo1(mydb, token)
+            return r
+
+    elif ac == 'getUserInfo2':
+        # 获取用户参加比赛列表
+        try:
+            token = request.form['token']           # token
+        except:
+            pass
+        else:
+            r = getaction.getUserInfo2(mydb, token)
+            return r
+
+    elif ac == 'getUserInfo3':
+        # 获取用户参加比赛列表
+        try:
+            token = request.form['token']           # token
+            matchID = int(request.form['matchid'])  # 比赛的id
+        except:
+            pass
+        else:
+            r = getaction.getUserInfo3(mydb, token,matchID)
+            return r
+
+    elif ac == 'getStockInfo':
+         # 获取股票信息
+        try:
+            token = request.form['token']  # token
+            stockID = request.form['stockid']  # 股票的id
+        except:
+            pass
+        else:
+            r = getaction.getStockInfo(mydb, token,stockID)
+            return r
+
+    elif ac == 'getUserOrder':
+         # 获取股票信息
+        try:
+            token = request.form['token']  # token
+            ordertype= int(request.form['order_type'])
+            orderstatus = int(request.form['order_status'])
+            startTime = int(request.form['start'])
+            endTime= int(request.form['end'])
+        except:
+            pass
+        else:
+            r = getaction.getUserOrder(mydb, token,ordertype,startTime,endTime,orderstatus)
+            return r
+
+
     # elif ac == 'getUserOrder':
     #     #查询该用户的所有状态的订单
     #     token = request.form['token']# token

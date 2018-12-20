@@ -8,6 +8,7 @@ import hashlib
 import mysql.connector
 from app import stock
 from app import competitor
+from flask import request
 
 
 def dueR(r, v):  # 将字典r的value项改成v的值，并且转成json
@@ -466,3 +467,181 @@ def getMatchRank(mydb, token, matchid):
         return dueR(r, 1)
     except:
         return dueR(r, -102)
+
+
+
+# 返回用户的基本信息
+def getUserInfo1(mydb,token):
+    r = {
+        'value': 0,
+    }
+    # 1： 正常、 -1：token错误、 101：数据库链接错误
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    r['wxid'] = user
+    r['value'] = 1
+    # 从用户的表单中取数据
+    mycursor = mydb.cursor()
+    sql = "SELECT heading FROM user_db WHERE wxid= %s "
+    val = (user,)
+    mycursor.execute(sql, val)
+    myresult=mycursor.fetchone()
+    r['heading'] = myresult[0]
+
+    sql = "SELECT nickName FROM user_db WHERE wxid= %s  "
+    val = (user,)
+    mycursor.execute(sql, val)
+    myresult = mycursor.fetchone()
+    r['nickName'] = myresult[0]
+
+    # 从黑名单表单中判断是否在黑名单
+    sql = "SELECT * FROM blacklist_db WHERE wxid= %s  "
+    val = (user,)
+    mycursor.execute(sql, val)
+    result = mycursor.fetchone()
+    if result is None:
+        result = 'no'
+    else:
+        result = 'yes'
+    r['inBlackList'] = result
+    return dueR(r, 1)
+
+
+
+#输出用户参加的所有比赛列表
+def getUserInfo2(mydb,token):
+    r = {
+        'value': 0,
+    }
+    # 1： 正常、 -1：token错误、 101：数据库链接错误 -2：该用户没有参加任何比赛
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    r['wxid'] = user
+    r['value'] = 1
+    mycursor = mydb.cursor()
+    # 从参赛用户表单中寻找该用户参加的所有比赛
+    sql="SELECT match_id FROM competitor_db WHERE wxid= %s "
+    val=(user,)
+    mycursor.execute(sql,val)
+    result = mycursor.fetchall()
+    if result==[]:
+        return dueR(r, -2)
+    # 所有比赛的id放进一个字典变量里面
+    matchidList=[]
+    for x in result:
+        tmp={'match_id':x[0]}
+        matchidList.append(tmp)
+    r['joinCompititions']=matchidList
+    return dueR(r, 1)
+
+
+#输出用户关于一个比赛的持仓信息
+def getUserInfo3(mydb,token,matchid):
+    r = {
+        'value': 0,
+    }
+    # 1： 正常、 -1：token错误、 101：数据库链接错误 -2：没有该用户关于该比赛的持仓信息
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    r['wxid'] = user
+    r['value'] = 1
+    r['matchid'] = matchid
+
+    # 获得所有持仓信息
+    mycursor = mydb.cursor()
+    # 从参赛用户表单中寻找该用户参加的所有比赛
+    sql = "SELECT * FROM storage_db WHERE wxid= %s AND match_id=%s"
+    val = (user,matchid)
+    mycursor.execute(sql, val)
+    result = mycursor.fetchall()
+    if result==[]:
+        return dueR(r, -2)
+    storageInfo=[]
+    for x in result:
+        tmp={'stock_id':x[3],'own_num':x[4],'ave_price':x[5],'lock_num':x[6]}
+        storageInfo.append(tmp)
+    r['value']=1
+    r['stockInfo']=storageInfo
+    return dueR(r, 1)
+
+
+# 用户查询单只股票，返回单只股票信息
+def getStockInfo(mydb,token, stockid):
+    r = {
+        'value': 0
+    }
+    # 1： 正常、 -1：token错误、 101：数据库链接错误
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    r['value'] = 1
+    dm=stock.getStockDM(stockid)
+    result=stock.getStockInfo(stockid,dm=dm)
+
+    r['stockInfo'] = result
+    return  dueR(r, 1)
+
+#用户查询订单
+def getUserOrder(mydb, token,ordertype,startTime,endTime,orderstatus):
+    r = {
+        'value': 0
+    }
+    # 1： 正常、 -1：token错误、 101：数据库链接错误
+    if mydb == None:
+        return dueR(r, -101)
+    user = checkTOKEN(token, mydb)
+    if user == None:
+        return dueR(r, -1)
+    r['wxid'] = user
+    r['value'] = 1
+
+    mycursor = mydb.cursor()
+    sql="SELECT * FROM order_db WHERE wxid= %s AND order_type=%s AND order_status=%s"
+    val=(user,ordertype,orderstatus)
+    mycursor.execute(sql, val)
+    tempList=[]
+    result= mycursor.fetchall()
+    for x in result:
+        tmp={'order_type':x[1] ,'create_time':x[3],'order_status':x[4],'stock_id':x[5],'order_num':x[6],'price':x[7],'match_id':x[8]}
+        tempList.append(tmp)
+    #找出符合时间的条目
+    finalList=[]
+
+    for x in tempList:
+       if x['create_time']>startTime and x['create_time']<endTime:
+            finalList.append(x)
+    
+
+    #转换成中文
+    trans_type={
+        1:'买入',
+        2:'卖出'
+    }
+    for x in finalList:
+        key=x['order_type']
+        x['order_type']=trans_type[key]
+
+    trans_status={
+        1:'进行中',
+        2:'完成',
+        3:'撤回'
+    }
+
+    for x in finalList:
+        key=x['order_status']
+        x['order_status']=trans_status[key]
+
+    r['orderInfo']=finalList
+
+    return dueR(r, 1)
