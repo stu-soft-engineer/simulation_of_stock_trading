@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.sql.*" import="java.util.*" import="utils.DBConn;" contentType="text/html; charset=UTF-8"
+<%@ page language="java" import="java.sql.*" import="java.util.*" import="java.text.*" import="utils.DBConn;" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
@@ -60,6 +60,7 @@
 	ResultSet rs=null;
 	Connection conn=null;
 	try {
+		DateFormat ymdhmsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		DBConn db=new DBConn();								//连接数据库的操作
 		conn=db.getConn();
 		state=conn.createStatement();
@@ -68,20 +69,25 @@
 		while(rs.next()){
 			if(match_id==rs.getInt(1)){
 				String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
-				String regist_time=rs.getString("regist_time");
-				String start_time=rs.getString("start_time");
-				String introduction=rs.getString("introduction");
-				String rules=rs.getString("rules");
-				String end_time=rs.getString("end_time");
-				String init_money=rs.getString("init_money");
+				String sign_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
+				String start_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
+				String match_detail=rs.getString("match_detail");
+				String match_rule=rs.getString("match_rule");
+				String end_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("end_time")) * 1000L)));
+				
+				int init_money=rs.getInt("init_money");
 			%>
 						<div>
                       		<label>比赛名称</label>				<!--  显示信息 -->
 							<p><%=match_name %></p>
                         </div>
                         <div>
-                            <label>简介</label>
-                            <p><%=introduction %></p>
+                            <label>比赛细节</label>
+                            <p><%=match_detail %></p>
+                        </div>
+                         <div>
+                            <label>注册时间</label>
+                            <p><%=sign_time %></p>
                         </div>
                         <div>
                             <label>开始时间</label>
@@ -97,7 +103,7 @@
                         </div>
                         <div>
                             <label>规则</label>
-                            <p><%=rules %></p>
+                            <p><%=match_rule %></p>
                         </div>
 			<%
 			}

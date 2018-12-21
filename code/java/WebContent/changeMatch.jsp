@@ -71,8 +71,8 @@
 							<input type="text" name="match_name" class="form-control" required="required"/>
                         </div> 	
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label>简介</label>
-                            <input type="text" name="introduction" class="form-control" required="required"/>
+                            <label>比赛详情</label>
+                            <input type="text" name="match_detail" class="form-control" required="required"/>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>开始时间</label>
@@ -88,8 +88,8 @@
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>规则</label>
-                            <textarea class="form-control" name="rules" rows="14"></textarea>
-                            <script type="text/javascript">CKEDITOR.replace('rules');</script>
+                            <textarea class="form-control" name="match_rule" rows="14"></textarea>
+                            <script type="text/javascript">CKEDITOR.replace('match_rule');</script>
                         </div>
 						<input type="hidden" name="action" value="change"/>
 						<input type="hidden" name="id" value="<%=id %>"/>

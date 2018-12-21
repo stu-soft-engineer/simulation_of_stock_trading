@@ -87,7 +87,7 @@ function goPage(num){
 											int count=0;
 											while(rs.next()){
 												String op_type=rs.getString("op_type");
-												String op_time=rs.getString("op_time");
+												String op_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("op_time")) * 1000L)));
 												String op_detail=rs.getString("op_detail");
 											    String id=rs.getString("id");
 									%>

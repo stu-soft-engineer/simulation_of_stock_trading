@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.sql.*" import="java.util.*" import="utils.DBConn;" contentType="text/html; charset=UTF-8"
+<%@ page language="java" import="java.sql.*" import="java.util.*" import="java.text.*" import="utils.DBConn;" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
@@ -80,6 +80,7 @@ function goPage(num){
 										ResultSet rs=null;
 										Connection conn=null;
 										try {
+											
 											DBConn db=new DBConn();
 											conn=db.getConn();
 											state=conn.createStatement();
@@ -87,14 +88,15 @@ function goPage(num){
 											int count=0;
 											while(rs.next()){
 												String match_name=rs.getString("match_name");					//从结果集中获取需要的信息
-												String regist_time=rs.getString("regist_time");
-												String start_time=rs.getString("start_time");
+												//将时间戳转换成时间
+												String sign_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
+												String start_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
 											    String id=rs.getString("id");
 									%>
                                         <tr id="<%=++count%>" >								<!-- 将对应的信息显示到表格中去  -->
                                             <td><div align="center"><%=count%></div></td>
                                             <td class="td<%=count%>"><div align="center"><span class="label label-danger"><%=match_name%></span></div></td>
-                                            <td class="td<%=count%>"><%=regist_time %></td>
+                                            <td class="td<%=count%>"><%=sign_time %></td>
                                             <td class="td<%=count%>"><%=start_time%></td>
                                             <td><div align="center"><a href='matchContent.jsp?id=<%=id%>' target ='_blank' class="label label-success">Details <i class="fa fa-forward"></i></a></div></td>
                                         </tr>
