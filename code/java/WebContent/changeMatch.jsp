@@ -57,38 +57,61 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-9 col-md-9 alert alert-info">
-
+					
                     <h3 class=" text-center">修改比赛</h3>
                    <div class="hr-div"> <hr /></div>
                     <form action="MatchesServlet" method="post">
-                    	<%
-							String id=request.getParameter("id");
-							System.out.println(id);
-							%>
-                   
+                    <!-- <%
+							//String id=request.getParameter("id");
+							//System.out.println(id);
+							%> -->	
+                   <%
+	String _match_id=request.getParameter("id");				//通过url来获取id号
+	System.out.print(_match_id);
+	int id=Integer.parseInt(_match_id);					//字符型转换成整型
+	Statement state=null;
+	ResultSet rs=null;
+	Connection conn=null;
+	try {
+		DBConn db=new DBConn();								//连接数据库的操作
+		conn=db.getConn();
+		state=conn.createStatement();
+		rs=state.executeQuery("select *from match_db");		//根据sql语句查询并返回一个结果集
+		int count=0;
+		while(rs.next()){
+			if(id==rs.getInt(1)){
+				String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
+				String sign_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
+				String start_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
+				String match_detail=rs.getString("match_detail");
+				String match_rule=rs.getString("match_rule");
+				String end_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("end_time")) * 1000L)));
+				
+				int init_money=rs.getInt("init_money");
+			%>
                          <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>比赛名称</label>  
-							<input type="text" name="match_name" class="form-control" required="required"/>
+							<input type="text" name="match_name" class="form-control" required="required" value="<%=match_name %>"/>
                         </div> 	
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>比赛详情</label>
-                            <input type="text" name="match_detail" class="form-control" required="required"/>
+                            <input type="text" name="match_detail" class="form-control" required="required" value="<%=match_detail %>"/>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>开始时间</label>
-                            <input type="text" name="start_time" class="form-control" required="required"/>
+                            <input type="text" name="start_time" class="form-control" required="required" value="<%=start_time%>"/>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>结束时间</label>
-                            <input type="text" name="end_time" class="form-control" required="required"/>
+                            <input type="text" name="end_time" class="form-control" required="required" value="<%=end_time%>"/>
                         </div>
                          <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>初始金额</label>
-                            <input type="text" name="init_money" class="form-control" required="required"/>
+                            <input type="text" name="init_money" class="form-control" required="required" value="<%=init_money %>"/>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>规则</label>
-                            <textarea class="form-control" name="match_rule" rows="14"></textarea>
+                            <textarea class="form-control" name="match_rule" rows="14" ><%=match_rule %></textarea>
                             <script type="text/javascript">CKEDITOR.replace('match_rule');</script>
                         </div>
 						<input type="hidden" name="action" value="change"/>
@@ -97,7 +120,25 @@
                             <button type="submit" class="btn btn-primary">修改比赛</button>
                         </div>
                     </form>
-
+		<%
+			}
+		}
+	}catch(Exception e){
+		e.printStackTrace();
+	}finally{
+		try{	
+			if(rs!=null)			//连接完记得要关闭
+				rs.close();
+			if(state!=null)
+				state.close();
+			if(conn!=null)
+				conn.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	%>
                 </div>
           </div>
       </div>

@@ -74,11 +74,11 @@
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>开始时间</label>
-                            <input type="text" name="start_time" class="form-control" required="required"/>
+                            <input type="text" name="start_time" class="form-control" required="required" placeholder="yyyy-MM-dd HH:mm:ss"/>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>结束时间</label>
-                            <input type="text" name="end_time" class="form-control" required="required"/>
+                            <input type="text" name="end_time" class="form-control" required="required" placeholder="yyyy-MM-dd HH:mm:ss"/>
                         </div>
                          <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label>初始金额</label>

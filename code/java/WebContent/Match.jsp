@@ -89,8 +89,8 @@ function goPage(num){
 											while(rs.next()){
 												String match_name=rs.getString("match_name");					//从结果集中获取需要的信息
 												//将时间戳转换成时间
-												String sign_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
-												String start_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
+												String sign_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
+												String start_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
 											    String id=rs.getString("id");
 									%>
                                         <tr id="<%=++count%>" >								<!-- 将对应的信息显示到表格中去  -->

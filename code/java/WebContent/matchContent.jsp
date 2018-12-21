@@ -60,7 +60,6 @@
 	ResultSet rs=null;
 	Connection conn=null;
 	try {
-		DateFormat ymdhmsFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		DBConn db=new DBConn();								//连接数据库的操作
 		conn=db.getConn();
 		state=conn.createStatement();
@@ -69,11 +68,11 @@
 		while(rs.next()){
 			if(match_id==rs.getInt(1)){
 				String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
-				String sign_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
-				String start_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
+				String sign_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("sign_time")) * 1000L)));
+				String start_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("start_time")) * 1000L)));
 				String match_detail=rs.getString("match_detail");
 				String match_rule=rs.getString("match_rule");
-				String end_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("end_time")) * 1000L)));
+				String end_time = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("end_time")) * 1000L)));
 				
 				int init_money=rs.getInt("init_money");
 			%>
