@@ -67,7 +67,9 @@ def login(mydb, user, password):
     except:
         return dueR(r, -102)
     else:
-        if myresult[0] > 0:
+        if len(myresult) == 0:
+            return dueR(r, -2)
+        if int(myresult[0]) > 0:
             return dueR(r, -2)
 
     token = getToken(user)
