@@ -24,10 +24,11 @@ def checkPSW(a, b):  # in：用户名，密码 out：真假 for：检测出密�
 
 
 def checkTOKEN(token, mydb):  # in：token,mydb out：wxid for：检测出token的用户id
-    mycursor = mydb.cursor()
     try:
+        mycursor = mydb.cursor()
         mycursor.execute("SELECT wxid FROM user_db WHERE token = %s", (token,))
         myresult = mycursor.fetchone()
+        mycursor.close()
         # print(myresult)
     except:
         return None
@@ -382,6 +383,7 @@ def getMatchInfo(mydb, token, matchid):
         r['end_time'] = myresult[6]
         r['init_money'] = myresult[7]
 
+        mycursor.close()
         return dueR(r, 1)
 
     except:
