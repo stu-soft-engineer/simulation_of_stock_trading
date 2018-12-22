@@ -59,7 +59,7 @@ def login(mydb, user, password):
     if mydb == None:
         return dueR(r, -101)
     mycursor = mydb.cursor()
-
+    myresult = None
     try:
         mycursor.execute("SELECT count(*) FROM blacklist_db WHERE wxid = %s", (user,))
         myresult = mycursor.fetchone()
@@ -67,7 +67,7 @@ def login(mydb, user, password):
     except:
         return dueR(r, -102)
     else:
-        if len(myresult) == 0:
+        if myresult == None:
             return dueR(r, -2)
         if int(myresult[0]) > 0:
             return dueR(r, -2)
