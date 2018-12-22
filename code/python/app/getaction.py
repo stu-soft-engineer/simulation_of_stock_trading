@@ -47,6 +47,12 @@ def getToken(user):  # 加密获取token
     md5.update(token.encode('utf-8'))
     return md5.hexdigest()
 
+def con():
+    db_host = '119.23.36.18'
+    db_user = 'test_market'
+    db_passed = 'GrZFWfSh4GTMRBFy'
+    db_name = "test_market"
+    return mysql.connector.connect(host=db_host, user=db_user, passwd=db_passed, database=db_name)
 
 def login(mydb, user, password):
     r = {
@@ -56,7 +62,7 @@ def login(mydb, user, password):
     # 1： 正常、 -1：密码错误、 -2：封号、 -101：数据库连接失败、 -102：更新token异常、 -103：更新token失败（未注册）
     if checkPSW(user, password):
         return dueR(r, -1)
-    # mydb = con()
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     mycursor = mydb.cursor()
@@ -93,7 +99,7 @@ def regist(mydb, user, password, heading, nick):
     # 1： 正常、 -1：密码错误、 -101：数据库连接失败、 -102：插入异常（重复注册）、 -103：插入失败
     if checkPSW(user,password):
         return dueR(r, -1)
-    # mydb = con()
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     try:
@@ -115,6 +121,7 @@ def buyOrder(mydb, token, *, matchID, stockID, buyNum, stockPrice):
         'value': 0
     }
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -147,6 +154,7 @@ def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
         'value': 0
     }
     # 1： 正常、 -1：token错误、 -2：库存不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -177,6 +185,7 @@ def rollBackOrder(mydb, token, rollBackOrder):
         'value': 0
     }
     # 1： 正常、 -1：token错误、 -2：订单id不存在、 -2：订单id已完成或撤回 -101：数据库连接失败、 -102：sql异常、 -102：更新订单失败
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -215,7 +224,7 @@ def getUserInfo(mydb, token):
         'wxid': ''
     }
     # 1： 正常、 -1：token错误
-    # mydb = con()
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -233,7 +242,7 @@ def joinMatch(mydb, token, matchid):
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
     # -3: 重复参加比赛  -4: 比赛不存在
-
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
 
@@ -299,7 +308,7 @@ def quitMatch(mydb, token, matchid):
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
     # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
-
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
 
@@ -351,7 +360,7 @@ def getMatchInfo(mydb, token, matchid):
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
     # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
-
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
 
@@ -392,7 +401,7 @@ def getMatchList(mydb, token):
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
     # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛
-
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
 
@@ -430,7 +439,7 @@ def getMatchRank(mydb, token, matchid):
 
     # 1： 正常、 -1：token错误、 -2：余额不足 -101：数据库连接失败、 -102：sql异常、 -103：sql无效
     # -3: 重复参加比赛  -4: 比赛不存在  -5: 已退出比赛  -6: 暂无参赛人员
-
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
 
@@ -476,6 +485,7 @@ def getUserInfo1(mydb,token):
         'value': 0,
     }
     # 1： 正常、 -1：token错误、 101：数据库链接错误
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -517,6 +527,7 @@ def getUserInfo2(mydb,token):
         'value': 0,
     }
     # 1： 正常、 -1：token错误、 101：数据库链接错误 -2：该用户没有参加任何比赛
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -547,6 +558,7 @@ def getUserInfo3(mydb,token,matchid):
         'value': 0,
     }
     # 1： 正常、 -1：token错误、 101：数据库链接错误 -2：没有该用户关于该比赛的持仓信息
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -580,6 +592,7 @@ def getStockInfo(mydb,token, stockid):
         'value': 0
     }
     # 1： 正常、 -1：token错误、 101：数据库链接错误
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
@@ -598,6 +611,7 @@ def getUserOrder(mydb, token,ordertype,startTime,endTime,orderstatus):
         'value': 0
     }
     # 1： 正常、 -1：token错误、 101：数据库链接错误
+    mydb = con()
     if mydb == None:
         return dueR(r, -101)
     user = checkTOKEN(token, mydb)
