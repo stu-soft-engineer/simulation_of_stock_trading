@@ -59,19 +59,34 @@ def login(mydb, user, password):
     # mydb = con()
     if mydb == None:
         return dueR(r, -101)
-    mycursor = mydb.cursor()
-    myresult = None
+    
     try:
-        mycursor.execute("SELECT count(*) FROM blacklist_db WHERE wxid = %s", (user,))
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "SELECT count(*) FROM blacklist_db WHERE wxid = %s", (user,))
         myresult = mycursor.fetchone()
-        print(myresult)
     except:
         return dueR(r, -102)
     else:
         if myresult == None:
             return dueR(r, -2)
-        if int(myresult[0]) > 0:
+        if myresult[0] > 0:
             return dueR(r, -2)
+        mycursor.close()
+
+    try:
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "SELECT count(*) FROM user_db WHERE wxid = %s", (user,))
+        myresult = mycursor.fetchone()
+    except:
+        return dueR(r, -102)
+    else:
+        if myresult == None:
+            return dueR(r, -102)
+        if myresult[0] == 0:
+            return dueR(r, -103)
+        mycursor.close()
 
     token = getToken(user)
     try:
@@ -98,6 +113,21 @@ def regist(mydb, user, password, heading, nick):
     # mydb = con()
     if mydb == None:
         return dueR(r, -101)
+
+    try:
+        mycursor = mydb.cursor()
+        mycursor.execute(
+            "SELECT count(*) FROM user_db WHERE wxid = %s", (user,))
+        myresult = mycursor.fetchone()
+    except:
+        return dueR(r, -103)
+    else:
+        if myresult == None:
+            return dueR(r, -103)
+        if myresult[0] > 0:
+            return dueR(r, -102)
+        mycursor.close()
+
     try:
         mycursor = mydb.cursor()
         mycursor.execute("INSERT INTO user_db (wxid, heading, regist_time, nickName) VALUES (%s, %s, %s, %s)", (user, heading, getTimeStamp(), nick))
@@ -109,6 +139,7 @@ def regist(mydb, user, password, heading, nick):
             r['value'] = 1
         else:
             r['value'] = -103
+    mycursor.close()
     return jsonify(r)
 
 
