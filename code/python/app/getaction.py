@@ -9,7 +9,7 @@ import mysql.connector
 from app import stock
 from app import competitor
 from flask import request
-
+from app import ssql
 
 def dueR(r, v):  # 将字典r的value项改成v的值，并且转成json
     r['value'] = v
@@ -56,14 +56,15 @@ def login(mydb, user, password):
     # 1： 正常、 -1：密码错误、 -2：封号、 -101：数据库连接失败、 -102：更新token异常、 -103：更新token失败（未注册）
     if checkPSW(user, password):
         return dueR(r, -1)
-    # mydb = con()
+
+    # mycon = ssql.SQLink()
+    # mydb = mycon.get_db()
     if mydb == None:
         return dueR(r, -101)
-    
+
     try:
         mycursor = mydb.cursor()
-        mycursor.execute(
-            "SELECT count(*) FROM blacklist_db WHERE wxid = %s", (user,))
+        mycursor.execute("SELECT count(*) FROM blacklist_db WHERE wxid = %s", (user,))
         myresult = mycursor.fetchone()
     except:
         return dueR(r, -102)
@@ -90,12 +91,15 @@ def login(mydb, user, password):
 
     token = getToken(user)
     try:
+        mycursor = mydb.cursor()
         mycursor.execute("UPDATE user_db SET token=%s WHERE wxid=%s", (token, user))
         mydb.commit()
+        row = mycursor.rowcount
+        mycursor.close()
     except:
         r['value'] = -102
     else:
-        if mycursor.rowcount > 0:
+        if row > 0:
             r['value'] = 1
             r['token'] = token
         else:
@@ -127,7 +131,7 @@ def regist(mydb, user, password, heading, nick):
         if myresult[0] > 0:
             return dueR(r, -102)
         mycursor.close()
-
+    
     try:
         mycursor = mydb.cursor()
         mycursor.execute("INSERT INTO user_db (wxid, heading, regist_time, nickName) VALUES (%s, %s, %s, %s)", (user, heading, getTimeStamp(), nick))
