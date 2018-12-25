@@ -8,11 +8,10 @@ from flask import request
 from app import getaction
 from app import ssql
 
-
+from app import judge
 mydbcon = ssql.SQLink()
 print('林肯死大头！', mydbcon)
-from app import judge
-judge.star_judeg(mydbcon.get_db())
+judge.star_judeg()
 
 @app.route('/')
 @app.route('/index')

@@ -28,7 +28,7 @@ def checkTOKEN(token, mydb):  # in：token,mydb out：wxid for：检测出token�
         mycursor = mydb.cursor()
         mycursor.execute("SELECT wxid FROM user_db WHERE token = %s", (token,))
         myresult = mycursor.fetchone()
-        mycursor.close()
+        #mycursor.close()
         # print(myresult)
     except:
         return None
@@ -73,7 +73,7 @@ def login(mydb, user, password):
             return dueR(r, -2)
         if myresult[0] > 0:
             return dueR(r, -2)
-        mycursor.close()
+        #mycursor.close()
 
     try:
         mycursor = mydb.cursor()
@@ -87,7 +87,7 @@ def login(mydb, user, password):
             return dueR(r, -102)
         if myresult[0] == 0:
             return dueR(r, -103)
-        mycursor.close()
+        #mycursor.close()
 
     token = getToken(user)
     try:
@@ -95,7 +95,7 @@ def login(mydb, user, password):
         mycursor.execute("UPDATE user_db SET token=%s WHERE wxid=%s", (token, user))
         mydb.commit()
         row = mycursor.rowcount
-        mycursor.close()
+        #mycursor.close()
     except:
         r['value'] = -102
     else:
@@ -130,7 +130,7 @@ def regist(mydb, user, password, heading, nick):
             return dueR(r, -103)
         if myresult[0] > 0:
             return dueR(r, -102)
-        mycursor.close()
+        #mycursor.close()
     
     try:
         mycursor = mydb.cursor()
@@ -143,7 +143,7 @@ def regist(mydb, user, password, heading, nick):
             r['value'] = 1
         else:
             r['value'] = -103
-    mycursor.close()
+    #mycursor.close()
     return jsonify(r)
 
 
@@ -418,7 +418,7 @@ def getMatchInfo(mydb, token, matchid):
         r['end_time'] = myresult[6]
         r['init_money'] = myresult[7]
 
-        mycursor.close()
+        #mycursor.close()
         return dueR(r, 1)
 
     except:

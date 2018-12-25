@@ -6,11 +6,14 @@ from app import stock, ssql
 from app import competitor
 # 说明https://blog.csdn.net/simon803/article/details/7784682
 
-
-mydb = None
+count = 0
+# mydb = None
 
 def checkOrder():
-    global mydb
+    # global mydb
+    mydbcon = ssql.SQLink()
+    mydb = mydbcon.get_db()
+    global count
     localtime = time.localtime()  # time.struct_time(tm_year=2018, tm_mon=12, tm_mday=18, tm_hour=20, tm_min=17, tm_sec=25, tm_wday=1, tm_yday=352, tm_isdst=0)
     nowHour = localtime.tm_hour
     nowMin = localtime.tm_min
@@ -33,6 +36,9 @@ def checkOrder():
         sti = stock.getStockInfo('000001', dm='sh')
         if sti[30] != time.strftime("%Y-%m-%d", time.localtime()):
             return
+        count += 1
+        print('交易撮合心跳<', count, '>', time.time())
+        
         mycursor = mydb.cursor()
         mycursor.execute("SELECT * FROM order_db WHERE order_status=1")
         myresult = mycursor.fetchall()
@@ -69,19 +75,16 @@ def checkOrder():
                 competitor.updateBalance(mydb, x[8], x[2], balance)
                 print('卖出打钱',x[2],x[5],balance)
 
-count = 0
+
 def judgeloop(): # 判官
-    global count
     while True:
-        count+=1
-        #print('交易撮合心跳<', count, '>', time.time())
         checkOrder()
         time.sleep(30)
 
 
-def star_judeg(dbcon): # 开始线程
-    global mydb
-    mydb = dbcon
+def star_judeg(): # 开始线程
+    # global mydb
+    # mydb = dbcon
     t = threading.Thread(target=judgeloop, name='Judge')
     t.start()
 
