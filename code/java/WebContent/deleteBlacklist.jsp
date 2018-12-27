@@ -57,13 +57,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-9 col-md-9 alert alert-info">
-                    <h3 class=" text-center">删除比赛</h3>
+                    <h3 class=" text-center">从黑名单中移出</h3>
                    <div class="hr-div"> <hr /></div>
-                    <form action="MatchesServlet" method="post">   
+                    <form action="BlacklistServlet" method="post">  
 							<%
-								String _match_id=request.getParameter("id");				//通过url来获取id号
-								System.out.print(_match_id);
-								int match_id=Integer.parseInt(_match_id);					//字符型转换成整型
+								String _Blacklist_id=request.getParameter("id");				//通过url来获取id号
+								System.out.print(_Blacklist_id);
+								int Blacklist_id=Integer.parseInt(_Blacklist_id);					//字符型转换成整型
 								Statement state=null;
 								ResultSet rs=null;
 								Connection conn=null;
@@ -74,10 +74,10 @@
 										rs=state.executeQuery("select *from match_db");		//根据sql语句查询并返回一个结果集
 										int count=0;
 										while(rs.next()){
-											if(match_id==rs.getInt(1)){
-												String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
+											if(Blacklist_id==rs.getInt(1)){
+												String wxid=rs.getString("wxid");		//从结果集中获取需要的信息
 												%>
-												<input type="hidden" name="match_name" value="<%=match_name%>"/>
+												<input type="hidden" name="wxid" value="<%=wxid%>"/>
 												<% 
 												}
 											}
@@ -97,7 +97,7 @@
 												}
 									%>
 						<input type="hidden" name="action" value="delete"/>		
-						<input type="hidden" name="id" value="<%=match_id%>"/>
+						<input type="hidden" name="id" value="<%=Blacklist_id%>"/>
 						
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <button type="submit" class="btn btn-primary">确认删除</button>

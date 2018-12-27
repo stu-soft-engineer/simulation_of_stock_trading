@@ -35,7 +35,7 @@ function goPage(num){
 	var rows = table.rows.length-1;
 	currentpage = num;
 	if (currentpage == 0) currentpage = 1;
-	if (currentpage == parseInt(rows/pagesize)+2) currentpage = parseInt(rows/pagesize)+1;
+	if (currentpage == parseInt(rows/pagesize)+2)currentpage = parseInt(rows/pagesize)+1;
 	for(var a=1;a<rows+1;a++){
 		var row = document.getElementById(a.toString());
 		if( a<=pagesize*(currentpage-1) || a>pagesize*currentpage ){row.style.display = "none"}
@@ -62,16 +62,17 @@ function goPage(num){
             <div class="row">
                 <div class="col-lg-9 col-md-9 col-sm-9">
                  
-                   <h3>日志栏</h3>
+                   <h3>用户栏</h3>
                      <div class="hr-div"> <hr /></div>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="Matches" >
                                     <thead>
                                         <tr>
                                             <th width="9%"> <div align="center">ID</div></th>
-                                            <th width="21%"><div align="center">修改类型</div></th>              
-                                            <th width="21%"><div align="center">修改时间</div></th>
-                                            <th width="49%"><div align="center">修改详情</div></th>     
+                                            <th width="35%"><div align="center">微信ID</div></th>              
+                                            <th width="35%"><div align="center">昵称</div></th>
+                                            <th width="21%"><div align="center">注册时间</div></th> 
+                                            <th width="14%"><div align="center">Details</div></th>    
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,20 +84,20 @@ function goPage(num){
 											DBConn db=new DBConn();
 											conn=db.getConn();
 											state=conn.createStatement();
-											rs=state.executeQuery("select *from log_db order by id desc");
+											rs=state.executeQuery("select *from user_db order by id desc");
 											int count=0;
 											while(rs.next()){
-												String op_type=rs.getString("op_type");
-												String op_time = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("op_time")) * 1000L)));
-												String op_detail=rs.getString("op_detail");
+												String wxid=rs.getString("wxid");
+												String nickName=rs.getString("nickName");
+												String regist_time=new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date(Long.valueOf((rs.getInt("regist_time")) * 1000L)));
 											    String id=rs.getString("id");
 									%>
                                         <tr id="<%=++count%>" >
                                             <td><div align="center"><%=count%></div></td>
-                                            <td class="td<%=count%>"><div align="center"><span class="label label-danger"><%=op_type %></span></div></td>
-                                            <td class="td<%=count%>"><%=op_time %></td>
-                                            <td class="td<%=count%>"><%=op_detail%></td>
-                                       
+                                            <td class="td<%=count%>"><div align="center"><span class="label label-danger"><%=wxid %></span></div></td>
+                                            <td class="td<%=count%>"><%=nickName %></td>
+                                            <td class="td<%=count%>"><%=regist_time%></td>
+                                            <td><div align="center"><a href='userPer.jsp?wxid=<%=wxid%>' target ='_blank' class="label label-success">Details <i class="fa fa-forward"></i></a></div></td>
                                         </tr>
                                       <%
 											}
@@ -127,7 +128,7 @@ function goPage(num){
   <a href="Match.jsp" class="list-group-item active">
  	 查看比赛
   </a>
-  <a href="userlist.jsp" class="list-group-item">查看用户</a>
+  <a href="log.jsp" class="list-group-item">查看日志</a>
   <a href="blacklist.jsp" class="list-group-item">查看用户黑名单</a>
 </div>   
             </div>

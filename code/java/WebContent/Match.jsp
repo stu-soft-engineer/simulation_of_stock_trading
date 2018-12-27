@@ -130,6 +130,7 @@ function goPage(num){
   增加比赛
   </a>
   <a href="log.jsp" class="list-group-item">查看日志</a>
+  <a href="userlist.jsp" class="list-group-item">查看用户</a>
   <a href="blacklist.jsp" class="list-group-item">查看用户黑名单</a>
 </div>   
             </div>

@@ -1,5 +1,8 @@
 <%@ page language="java" import="java.sql.*" import="java.util.*" import="utils.DBConn;" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<!--
+//-->
+</script>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -15,7 +18,7 @@
     <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <![endif]-->
-    <title>修改公告</title>
+    <title>addBlacklist</title>
     <!-- BOOTSTRAP CORE STYLE CSS -->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
     <!-- FONT AWESOME CSS -->
@@ -33,11 +36,11 @@
     <script type="text/javascript" src="resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
-    <div id="head">								<!-- 与addMatch同理 -->
+    <div id="head">									
         <div class="container">
             <div class="row">
 
-              <div class="col-lg-4 col-md-4 col-sm-4">
+              <div class="col-lg-4 col-md-4 col-sm-4">		<!-- 类名是为了增加css样式 -->
                     <a href="Match.jsp">
                     <img src="assets/img/logo1.png"  />
                   </a>
@@ -56,51 +59,22 @@
     <section id="main">
         <div class="container">
             <div class="row">
-                <div class="col-lg-9 col-md-9 alert alert-info">
-                    <h3 class=" text-center">删除比赛</h3>
+                <div class="col-lg-9 col-md-9 alert alert-info">		
+
+                    <h3 class=" text-center">新增用户黑名单</h3>
                    <div class="hr-div"> <hr /></div>
-                    <form action="MatchesServlet" method="post">   
-							<%
-								String _match_id=request.getParameter("id");				//通过url来获取id号
-								System.out.print(_match_id);
-								int match_id=Integer.parseInt(_match_id);					//字符型转换成整型
-								Statement state=null;
-								ResultSet rs=null;
-								Connection conn=null;
-								try {
-										DBConn db=new DBConn();								//连接数据库的操作
-										conn=db.getConn();
-										state=conn.createStatement();
-										rs=state.executeQuery("select *from match_db");		//根据sql语句查询并返回一个结果集
-										int count=0;
-										while(rs.next()){
-											if(match_id==rs.getInt(1)){
-												String match_name=rs.getString("match_name");		//从结果集中获取需要的信息
-												%>
-												<input type="hidden" name="match_name" value="<%=match_name%>"/>
-												<% 
-												}
-											}
-										}catch(Exception e){
-											e.printStackTrace();
-											}finally{
-												try{	
-													if(rs!=null)			//连接完记得要关闭
-														rs.close();
-													if(state!=null)
-														state.close();
-													if(conn!=null)
-														conn.close();
-													}catch(SQLException e){
-														e.printStackTrace();
-														}
-												}
-									%>
-						<input type="hidden" name="action" value="delete"/>		
-						<input type="hidden" name="id" value="<%=match_id%>"/>
-						
+                    <form action="MatchesServlet" method="post">
+                      <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label>微信号</label>
+							<input type="text" name="wxid" class="form-control" required="required"/>
+                        </div>
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <button type="submit" class="btn btn-primary">确认删除</button>
+                            <label>拉黑理由</label>
+                            <input type="text" name="reason" class="form-control" required="required"/>
+                        </div>
+						<input type="hidden" name="action" value="insert"/>		<!-- 传递要做的操作和id号 -->
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <button type="submit" class="btn btn-primary">确定拉黑</button>
                         </div>
                     </form>
 
@@ -112,6 +86,5 @@
     <script src="assets/js/jquery-1.10.2.js"></script>
     <!--  Core Bootstrap Script -->
     <script src="assets/js/bootstrap.js"></script>
-
 </body>
 </html>
