@@ -1,0 +1,3 @@
+[submodule "code/code/SimulatedStocks"]
+	path = code/code/SimulatedStocks
+	url = https://github.com/stuwyp/SimulatedStocks
