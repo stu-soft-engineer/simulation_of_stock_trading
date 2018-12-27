@@ -9,8 +9,7 @@ from app import getaction
 from app import ssql
 
 from app import judge
-mydbcon = ssql.SQLink()
-print('林肯死大头！', mydbcon)
+
 judge.star_judeg()
 
 @app.route('/')
@@ -30,12 +29,15 @@ def action_index():
     return render_template('index.html', title='STU', user=user, posts=posts)
 
 
-@app.route('/<ac>', methods=['POST'])
+@app.route('/<ac>', methods=['POST', 'GET'])
 def to_do(ac):
-    global mydbcon
+    mydbcon = ssql.SQLink()
     mydb = mydbcon.get_db()  # 这个是数据库连接
 
-    if ac == 'login':
+    if ac == 'top':
+        r = getaction.topstock()
+        return r
+    elif ac == 'login':
         # 登录
         try:
             user = request.form['user']  # wxid

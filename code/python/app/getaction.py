@@ -10,6 +10,7 @@ from app import stock
 from app import competitor
 from flask import request
 from app import ssql
+import requests
 
 def dueR(r, v):  # 将字典r的value项改成v的值，并且转成json
     r['value'] = v
@@ -47,6 +48,14 @@ def getToken(user):  # 加密获取token
     token = user + '-' + str(getTimeStamp())
     md5.update(token.encode('utf-8'))
     return md5.hexdigest()
+
+
+def topstock():
+    url = "http://hq.sinajs.cn/format=text&func=StockList.fill1();StockList.refresh();Util.delScriptLoader('0');&list=stock_sh_up_d_10,stock_sh_down_d_10,stock_sz_up_d_10,stock_sz_down_d_10"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36'}
+    r = requests.get(url, headers=headers)
+    return r.text
+
 
 def login(mydb, user, password):
     r = {
