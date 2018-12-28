@@ -179,14 +179,15 @@ def buyOrder(mydb, token, *, matchID, stockID, buyNum, stockPrice):
         # 加入订单
         mycursor = mydb.cursor()
         mycursor.execute(
-            "INSERT INTO order_db (order_type, matchID, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
-            (1,matchID, user, getTimeStamp(), 1, stockID, buyNum, stockPrice))
+            "INSERT INTO order_db (order_type, match_id, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
+            (1, matchID, user, getTimeStamp(), 1, stockID, buyNum, stockPrice))
         mydb.commit()
         if mycursor.rowcount == 0:
             return dueR(r, -103)
         return dueR(r, 1)
     except:
         return dueR(r, -102)
+   
 
 
 def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
@@ -211,8 +212,8 @@ def sellOrder(mydb, token, *, matchID, stockID, sellNum, stockPrice):
         # 加入订单
         mycursor = mydb.cursor()
         mycursor.execute(
-            "INSERT INTO order_db (order_type,matchID, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
-            (2,matchID, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
+            "INSERT INTO order_db (order_type, match_id, wxid, creat_time, order_status, stock_id, order_num, price) VALUES ( %s,%s, %s, %s, %s, %s, %s, %s)",
+            (2, matchID, user, getTimeStamp(), 1, stockID, sellNum, stockPrice))
         mydb.commit()
         if mycursor.rowcount == 0:
             return dueR(r, -103)
