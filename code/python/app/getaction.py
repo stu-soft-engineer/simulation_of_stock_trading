@@ -668,7 +668,7 @@ def getUserOrder(mydb, token,ordertype,startTime,endTime,orderstatus):
     tempList=[]
     result= mycursor.fetchall()
     for x in result:
-        tmp={'order_type':x[1] ,'create_time':x[3],'order_status':x[4],'stock_id':x[5],'order_num':x[6],'price':x[7],'match_id':x[8]}
+        tmp={'id':x[0],'order_type':x[1] ,'create_time':x[3],'order_status':x[4],'stock_id':x[5],'order_num':x[6],'price':x[7],'match_id':x[8]}
         tempList.append(tmp)
     #找出符合时间的条目
     finalList=[]
